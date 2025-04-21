@@ -3,9 +3,10 @@ import { reactive } from 'vue';
 import Cabecalho from './components/Cabecalho.vue';
 import Formulario from './components/Formulario.vue';
 import ListaDeTarefas from './components/ListaDeTarefas.vue';
+
 const estado = reactive({
   filtro: 'todas',
-  tareTemp: '',
+  tarefaTemp: '', // Corrigido aqui
   tarefas: [
     {
       titulo: 'Estudar ES6',
@@ -20,17 +21,15 @@ const estado = reactive({
       finalizada: true,
     }
   ]
-})
+});
 
 const getTarefasPendentes = () => {
-  return estado.tarefas.filter(tarefa => !tarefa.finalizada)
+  return estado.tarefas.filter(tarefa => !tarefa.finalizada);
+};
 
-}
-
-const getTarefasfinalizadas = () => {
-  return estado.tarefas.filter(tarefa => tarefa.finalizada)
-
-}
+const getTarefasFinalizadas = () => {
+  return estado.tarefas.filter(tarefa => tarefa.finalizada);
+};
 
 const getTarefasFiltradas = () => {
   const { filtro } = estado;
@@ -39,31 +38,34 @@ const getTarefasFiltradas = () => {
     case 'pendentes':
       return getTarefasPendentes();
     case 'finalizadas':
-      return getTarefasfinalizadas();
+      return getTarefasFinalizadas();
     default:
       return estado.tarefas;
   }
-}
+};
 
 const cadastraTarefa = () => {
   const tarefaNova = {
-    titulo: estado.tarefaTemp,
+    titulo: estado.tarefaTemp, // Corrigido aqui
     finalizada: false,
-  }
+  };
   estado.tarefas.push(tarefaNova);
   estado.tarefaTemp = '';
-}
+};
 </script>
 
 <template>
   <div class="container">
 
-<Cabecalho :tarefas-pendentes="getTarefasPendentes().length"/>
+    <Cabecalho :tarefas-pendentes="getTarefasPendentes().length"/>
 
-<Formulario :trocar-filtro="evento =>estado.filtro = evento.target.value" :tarefa-temp="estado.tarefaTemp" :edita-tarefa-temp="evento => estado.tarefa-temp = evento.target.value" :cadastra-tarefa="cadastraTarefa"/>
+    <Formulario 
+      :trocar-filtro="evento => estado.filtro = evento.target.value" 
+      :tarefa-temp="estado.tarefaTemp" 
+      :edita-tarefa-temp="evento => estado.tarefaTemp = evento.target.value" 
+      :cadastra-tarefa="cadastraTarefa"/>
 
-<ListaDeTarefas :tarefas="getTarefasFiltradas()"/>    
+    <ListaDeTarefas :tarefas="getTarefasFiltradas()"/>    
 
   </div>
 </template>
-
